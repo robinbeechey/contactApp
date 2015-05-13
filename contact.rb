@@ -1,14 +1,18 @@
-require 'csv'
+
+require 'pg'
+
 require_relative 'contact_database'
-require_relative 'contact_list'
+# require_relative 'contacts_table'
 
 class Contact 
 
-  attr_accessor :name, :email, :phone_number
+  attr_accessor :first_name, :last_name, :email, :phone_number
   attr_reader :id
 
-  def initialize(name, email, phone_number)
-      @name = name
+
+  def initialize(first_name, last_name, email, phone_number, id=nil)
+      @first_name = first_name
+      @last_name = last_name
       @email = email
       @phone_number = phone_number
       @id = id
@@ -17,58 +21,170 @@ class Contact
    
   def to_s
     # TODO: return string representation of Contact
-    "#{@name}, #{@email}"
+    "#{@first_name} #{@last_name} #{@email} #{@phone_number}"
+
+  end
+
+  def is_new?
+    @id.nil?
   end
 
   def save
+
+    if is_new?
+    result = @@con.exec_params('INSERT INTO contacts_table (first_name, last_name, email, phone_number) VALUES ($1, $2, $3, $4) returning id', [@first_name, @last_name, @email, @phone_number])
+      @id = result[0]['id']
+    else
+       @@con.exec_params('UPDATE contacts_table SET first_name = $1, last_name = $2, email = $3, phone_number = $4 WHERE id = $5', [@first_name, @last_name, @email, @phone_number, @id])
+    end
+
   end
 
   def destroy
+    @@con.exec_params('DELETE FROM contacts_table WHERE id = $1', [@id])
   end
+
  
-  ## Class Methods
+
   class << self
+
+    def connection
+      @@con ||= PG::Connection.new({
+      dbname: 'dbl01dhuenecbc',
+      port: 5432,
+      user: 'bqjsghfauqlbkv',
+      host: 'ec2-50-19-233-111.compute-1.amazonaws.com',
+      password: 'twZcyMXLTpFC_zj40JuShLOWTE'
+    })
+
+    end
     
-    def create(name, email)
-      # TODO: Will initialize a contact as well as add it to the list of contacts
-      @contact_arr << @name + @email
-      @contact = Contact.new(name, email)
+    def create(first_name, last_name, email, phone_number)
 
-      CSV.open('contacts.csv', 'a') do |contacts|
-        contacts << [@contact]
-      end  
+        Contact.connection
+
+        new_contact = Contact.new(first_name, last_name, email, phone_number) 
+        new_contact.save
 
     end
 
- 
-    def find(index)
-      # TODO: Will find and return contact by index
-       CSV.foreach_with_index('contacts.csv', 'a') do |line, index| 
-       end
 
+    def find_all_by_number(phone_number)
+
+      Contact.connection
+      result = nil
+        @@con.exec_params('SELECT * FROM contacts_table WHERE phone_number = $1', [phone_number]) do |rows|
+            rows.each do |row|
+              result = Contact.new(
+                  row['first_name'],
+                  row['last_name'],
+                  row['email'],
+                  row['phone_number'],
+                  row['id']
+              )
+            end
+          end
+      puts result
+
+    end
+      
+    def find_all_by_firstname(first_name)
+
+      Contact.connection
+      result = nil
+        @@con.exec_params('SELECT * FROM contacts_table WHERE first_name = $1', [first_name]) do |rows|
+            rows.each do |row|
+              result = Contact.new(
+                  row['first_name'],
+                  row['last_name'],
+                  row['email'],
+                  row['phone_number'],
+                  row['id']
+              )
+            end
+          end
+      puts result
 
     end
 
+
+    def find_all_by_lastname(last_name)
+
+      Contact.connection
+      result = nil
+        @@con.exec_params('SELECT * FROM contacts_table WHERE last_name = $1', [last_name]) do |rows|
+            rows.each do |row|
+              result = Contact.new(
+                  row['first_name'],
+                  row['last_name'],
+                  row['email'],
+                  row['phone_number'],
+                  row['id']
+              )
+            end
+          end
+      puts result
+
+    end
+
+
+    def find_by_email(email)
+
+      Contact.connection
+      result = nil
+        @@con.exec_params('SELECT * FROM contacts_table WHERE email = $1', [email]) do |rows|
+            rows.each do |row|
+              result = Contact.new(
+                  row['first_name'],
+                  row['last_name'],
+                  row['email'],
+                  row['phone_number'],
+                  row['id']
+              )
+            end
+          end
+      puts result
+
+    end
+
+
+
  
-    def all
-      # TODO: Return the list of contacts, as is
-      Contact.new
-      CSV.foreach('contact.csv', 'a') do |row|
-        puts row
+    def list 
+
+      Contact.connection
+      result = []
+      @@con.exec_params('SELECT * FROM contacts_table;') do |rows|
+        rows.each do |row|
+          result << Contact.new(row['first_name'],row['last_name'],row['email'],row['phone_number'],row['id'])
+        end
       end
-
-
+      puts result
+        
     end
+    
 
     
-    def show(id)
-      # TODO: Show a contact, based on ID
-    end
+    def show(id)     
 
+      Contact.connection
+      result = nil
+        @@con.exec_params('SELECT * FROM contacts_table WHERE id = $1 LIMIT 1', [id]) do |rows|
+            rows.each do |row|
+              result = Contact.new(
+                  row['first_name'],
+                  row['last_name'],
+                  row['email'],
+                  row['phone_number'],
+                  row['id']
+              )
+            end
+          end
+          puts result
+
+    end
     
   end
-
-
 end
 
 
