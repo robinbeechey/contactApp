@@ -1,7 +1,17 @@
 ## TODO: Implement CSV reading/writing
-require 'csv'
+require 'pg'
 
 class ContactDatabase
-  def somemethod
+
+
+
+  def initialize
+    
   end
+
+  def save_query
+
+  end
+
+
 end
