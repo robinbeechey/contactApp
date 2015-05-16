@@ -1,6 +1,17 @@
 require_relative 'contact'
-# require_relative 'contacts_table'
 require 'byebug'
+
+
+
+
+Contact.create(first_name: "Pepe", last_name: "Cortisona", email: "piki@gmail.com")
+
+@contact1 = Contact.find(1)
+
+@contact1.phones.create(phone_number: "2505551234")
+
+
+
 
 case ARGV[0]
 
