@@ -3,12 +3,18 @@ require_relative 'contact_database'
 
 
 case ARGV[0]
-  when "create"
-    STDOUT.puts "creating"
+  when "new"
+    puts "Enter name" 
+    @name = STDIN.gets.chomp   
+    puts "Enter email"
+    @email = STDIN.gets.chomp
+    Contact.create(@name, @email)
   when "all"
-    STDOUT.puts "all"
+    puts "all"
   when "show"
-    STDOUT.puts "showing by id"
+    puts "showing by id"
   when "find"
-    STDOUT.puts "showing by id"
+    puts "showing by id"
+  when "help"
+    puts "Here are your choices\nNew - Add contact\nAll - Display all\nShow [id] - Show contact\nFind [id] - Same as show"
 end
