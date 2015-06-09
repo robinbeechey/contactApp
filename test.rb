@@ -1,20 +1,40 @@
 class Test
-  attr_accessor :count
-  def initialize(count=0)
-    @count = count
+  @@contacts = []
+  attr_accessor :phone, :name
+  def initialize(name,phone={})
+    @name = name
+    @phone = phone
   end
 
-  def add_count
-    @count += 1
+  def add_phone(type, number)
+    @phone[type.to_sym] = number
   end 
 
   def to_s
-    "#{count}"
+    "#{@name}, #{@phone}"
   end
+
+  def contacts_puts
+    puts @@contacts.inspect
+  end
+
+  def self.create(name, phone)
+    @@contacts << Test.new(name, phone)
+  end
+
 end
 
-test1 = Test.new
-test1.add_count
 
-puts test1
+contact = Test.create("robin",:home => 5555)
+
+contact[0].add_phone("cellphone", 1234)
+contact[0].name = "pepe"
+
+
+
+
+puts contact.inspect
+puts contact
+
+
 

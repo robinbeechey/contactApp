@@ -20,7 +20,6 @@ class Contact
     "Id:".green + "#{id} -" + "Name:".green + "#{name}" + ", " +"e-mail:".green + "#{email}" + " Phone number(s):".green + "#{phone_number}"
   end
 
-  #not sure why no work.
   def add_number(type, number)
     @phone_number[type] = number
   end

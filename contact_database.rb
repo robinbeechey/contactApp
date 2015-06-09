@@ -20,15 +20,15 @@ class ContactDatabase
   end
 
 
-  # def self.save
-  #   contacts = Contact.all
+  def self.save
+    contacts = Contact.all
 
-  #   CSV.open(CSV_FILE, 'w') do |file|
-  #     contacts.each do |contact|
-  #       file << [contact.name, contact.email, contact.phone_number]
-  #     end
-  #   end
-  # end
+    CSV.open(CSV_FILE, 'w') do |file|
+      contacts.each do |contact|
+        file << [contact.name, contact.email, contact.phone_number]
+      end
+    end
+  end
 
 
 end
