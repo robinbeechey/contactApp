@@ -1,5 +1,5 @@
 
-CREATE TABLE contacts_table (
+CREATE TABLE contacts (
   id SERIAL PRIMARY KEY NOT NULL,
   first_name VARCHAR(15),
   last_name VARCHAR(15),

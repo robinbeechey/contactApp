@@ -1,9 +1,6 @@
 
 require 'pg'
 
-require_relative 'contact_database'
-# require_relative 'contacts_table'
-
 class Contact 
 
   attr_accessor :first_name, :last_name, :email, :phone_number
@@ -21,7 +18,7 @@ class Contact
    
   def to_s
     # TODO: return string representation of Contact
-    "#{@first_name} #{@last_name} #{@email} #{@phone_number}"
+    "ID:#{id} Full Name: #{@first_name} #{@last_name}, E-mail: #{@email}, Phone# #{@phone_number}"
 
   end
 
@@ -29,43 +26,33 @@ class Contact
     @id.nil?
   end
 
-  def save
+  # def save
 
-    if is_new?
-    result = @@con.exec_params('INSERT INTO contacts_table (first_name, last_name, email, phone_number) VALUES ($1, $2, $3, $4) returning id', [@first_name, @last_name, @email, @phone_number])
-      @id = result[0]['id']
-    else
-       @@con.exec_params('UPDATE contacts_table SET first_name = $1, last_name = $2, email = $3, phone_number = $4 WHERE id = $5', [@first_name, @last_name, @email, @phone_number, @id])
-    end
+  #   if is_new?
+  #   result = @@con.exec_params('INSERT INTO contacts_table (first_name, last_name, email, phone_number) VALUES ($1, $2, $3, $4) returning id', [@first_name, @last_name, @email, @phone_number])
+  #     @id = result[0]['id']
+  #   else
+  #      @@con.exec_params('UPDATE contacts_table SET first_name = $1, last_name = $2, email = $3, phone_number = $4 WHERE id = $5', [@first_name, @last_name, @email, @phone_number, @id])
+  #   end
 
-  end
+  # end
 
   def destroy
     @@con.exec_params('DELETE FROM contacts_table WHERE id = $1', [@id])
+  end
+
+  def save
+    result = $conn.exec_params('INSERT INTO contacts (first_name, last_name, email, phone_number) VALUES ($1, $2, $3, $4) returning id', [first_name, last_name, email, phone_number])
+      id = result[0]['id']
   end
 
  
 
   class << self
 
-    def connection
-      @@con ||= PG::Connection.new({
-      dbname: 'dbl01dhuenecbc',
-      port: 5432,
-      user: 'bqjsghfauqlbkv',
-      host: 'ec2-50-19-233-111.compute-1.amazonaws.com',
-      password: 'twZcyMXLTpFC_zj40JuShLOWTE'
-    })
-
-    end
-    
     def create(first_name, last_name, email, phone_number)
-
-        Contact.connection
-
-        new_contact = Contact.new(first_name, last_name, email, phone_number) 
+        new_contact = Contact.new(first_name, last_name, email, phone_number)
         new_contact.save
-
     end
 
 
@@ -151,37 +138,36 @@ class Contact
 
  
     def list 
-
-      Contact.connection
-      result = []
-      @@con.exec_params('SELECT * FROM contacts_table;') do |rows|
-        rows.each do |row|
-          result << Contact.new(row['first_name'],row['last_name'],row['email'],row['phone_number'],row['id'])
-        end
-      end
-      puts result
-        
+      result = $conn.exec_params('SELECT * FROM contacts')
+      create_array(result)
     end
     
 
     
-    def show(id)     
+    # def show(id)
+    #   Contact.connection
+    #   result = nil
+    #     @@con.exec_params('SELECT * FROM contacts_table WHERE id = $1 LIMIT 1', [id]) do |rows|
+    #         rows.each do |row|
+    #           result = Contact.new(
+    #               row['first_name'],
+    #               row['last_name'],
+    #               row['email'],
+    #               row['phone_number'],
+    #               row['id']
+    #           )
+    #         end
+    #       end
+    #       puts result
+    # end
 
-      Contact.connection
-      result = nil
-        @@con.exec_params('SELECT * FROM contacts_table WHERE id = $1 LIMIT 1', [id]) do |rows|
-            rows.each do |row|
-              result = Contact.new(
-                  row['first_name'],
-                  row['last_name'],
-                  row['email'],
-                  row['phone_number'],
-                  row['id']
-              )
-            end
-          end
-          puts result
 
+    def create_array(contacts)
+      result = []
+      contacts.each do |row|
+        result << Contact.new(row['first_name'],row['last_name'],row['email'],row['phone_number'],row['id'])
+      end
+      result
     end
     
   end
