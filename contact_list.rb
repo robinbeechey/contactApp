@@ -8,6 +8,8 @@ class ContactNotFound < Exception
 end
 class NoDataFound < Exception
 end
+class NoIdInserted < Exception
+end
 
 class Run
 
@@ -31,35 +33,41 @@ class Run
 
   def new_contact 
     begin 
-    puts "Enter email"
-    email = STDIN.gets.chomp
+      puts "Enter email"
+      email = STDIN.gets.chomp
     raise DuplicateEmail, "Contact allready in database" if Contact.duplicate(email)
-    puts "Enter name" 
-    name = STDIN.gets.chomp
-    number = new_numbers
-    Contact.create(name, email, number[0] => number[1])
-    ContactDatabase.write(name, email, number[0] => number[1])  
+      puts "Enter name" 
+      name = STDIN.gets.chomp
+      number = new_numbers
+      Contact.create(name, email, number[0] => number[1])
+      ContactDatabase.write(name, email, number[0] => number[1])  
     rescue DuplicateEmail => e
-      puts e.message
+        puts e.message
     end
   end
 
-  #also not sure why not f***cking working
-  def add_new_number
-    contact = Contact.show(ARGV[1].to_i)
-    puts contact
-    number = new_numbers
-    contact[0].add_number(number[0], number[1])
-  end
+
+  # def add_new_number
+  #   begin
+  #   raise NoIdInserted, "You must be specific." if ARGV[1].nil?
+  #     contact = Contact.show(ARGV[1].to_i)
+  #     puts contact
+  #     number = new_numbers
+  #     contact[0].add_number(number[0], number[1])
+  #     ContactDatabase.save
+  #   rescue NoIdInserted => e
+  #     puts e.message
+  #   end
+  # end
 
 
-  def new_numbers
-    puts "Enter type of phone number"
-    type = STDIN.gets.chomp
-    puts "Enter phone number"
-    number = STDIN.gets.chomp
-    [type, number]
-  end
+  # def new_numbers
+  #   puts "Enter type of phone number"
+  #   type = STDIN.gets.chomp
+  #   puts "Enter phone number"
+  #   number = STDIN.gets.chomp
+  #   [type, number]
+  # end
 
 
   def list_all
@@ -69,25 +77,25 @@ class Run
 
   def show_by_id
     begin
-    contact = Contact.show(ARGV[1].to_i)
+      contact = Contact.show(ARGV[1].to_i)
     raise ContactNotFound, "Contact not found" if contact.nil? || contact.empty?
-    puts contact
+      puts contact
     rescue ContactNotFound => e
-      puts e.message
+        puts e.message
     end
   end
 
 
   def find_by_term
     begin
-    contact = Contact.find(ARGV[1])
+      contact = Contact.find(ARGV[1])
     raise NoDataFound, "Contacts with the that Data do not exist" if contact.nil? || contact.empty?
-    puts contact
+      puts contact
     rescue NoDataFound => e
       puts e.message
     end
   end
-
+  
 
 end
 

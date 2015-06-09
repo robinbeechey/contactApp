@@ -10,7 +10,7 @@ class Contact
   def initialize(name, email, phone_number = {})
     @name = name
     @email = email
-    @phone_number = phone_number    
+    @phone_number = phone_number
     @id = @@contacts
     @@contacts += 1
   end
@@ -22,7 +22,11 @@ class Contact
 
   #not sure why no work.
   def add_number(type, number)
-    @phone_number[type.to_sym] = number
+    @phone_number[type] = number
+  end
+
+  def test
+    puts "test"
   end
 
 
@@ -33,7 +37,7 @@ class Contact
   #   end
   #   number
   # end
-   
+    
 
   def self.create(name, email, phone_number = {})
     @@contact_list << Contact.new(name, email, phone_number)
@@ -42,7 +46,7 @@ class Contact
 
   def self.find(term)
     @@contact_list.select do |contact|
-      contact.name.downcase.include?(term) || contact.email.downcase.include?(term) 
+      contact.name.downcase.include?(term) || contact.email.downcase.include?(term)
     end
   end
 
