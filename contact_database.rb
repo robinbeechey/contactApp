@@ -13,9 +13,9 @@ class ContactDatabase
   end
 
 
-  def self.write(name, email, phone_number)
+  def self.write(name, email, phone_numbers)
     CSV.open(CSV_FILE, 'a') do |file|
-      file << [name, email, phone_number]
+      file << [name, email, phone_numbers]
     end
   end
 
@@ -25,7 +25,8 @@ class ContactDatabase
 
     CSV.open(CSV_FILE, 'w') do |file|
       contacts.each do |contact|
-        file << [contact.name, contact.email, contact.phone_number]
+        binding.pry
+        file << [contact.name, contact.email, contact.phone_numbers]
       end
     end
   end

@@ -39,20 +39,18 @@ class Run
       puts "Enter name" 
       name = STDIN.gets.chomp
       number = new_numbers
-      Contact.create(name, email, number[0] => number[1])
-      ContactDatabase.write(name, email, number[0].to_sym => number[1])  
+      Contact.create(name, email, [number[0], number[1]])
+      ContactDatabase.write(name, email, [number[0].to_sym, number[1]])  
     rescue DuplicateEmail => e
         puts e.message
     end
   end
-  #must convert string back to hash
-  #maybe convert hash to string then insert into csv file
+
 
   def add_new_number
     begin
     raise NoIdInserted, "You must be specific." if ARGV[1].nil?
       contact = Contact.show(ARGV[1].to_i)
-      puts contact.inspect
       number = new_numbers
       # binding.pry
       contact[0].add_number(number[0], number[1])
@@ -65,9 +63,10 @@ class Run
 
   def new_numbers
     puts "Enter type of phone number"
-    type = STDIN.gets.chomp
+    type = STDIN.gets.chomp.to_sym
     puts "Enter phone number"
     number = STDIN.gets.chomp
+
     [type, number]
   end
 

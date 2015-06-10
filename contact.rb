@@ -2,43 +2,30 @@
 
 class Contact
  
-  attr_accessor :name, :email, :id, :phone_number
+  attr_accessor :name, :email, :id, :phone_numbers
 
     @@contact_list = []
     @@contacts = 1
  
-  def initialize(name, email, phone_number = {})
+  def initialize(name, email, phone_numbers=[])
     @name = name
     @email = email
-    @phone_number = phone_number
+    @phone_numbers = phone_numbers
     @id = @@contacts
     @@contacts += 1
   end
 
  
   def to_s
-    "Id:".green + "#{id} -" + "Name:".green + "#{name}" + ", " +"e-mail:".green + "#{email}" + " Phone number(s):".green + "#{phone_number}"
+    "Id:".green + "#{id} -" + "Name:".green + "#{name}" + ", " +"e-mail:".green + "#{email}" + " Phone number(s):".green + "#{phone_numbers}"
   end
+
 
   def add_number(type, number)
-    @phone_number[type] = number
+    @phone_numbers.push("#{type}, #{number}")
   end
 
-  def test
-    puts "test"
-  end
-
-
-  # def display_phone_numbers
-  #   number = ''
-  #   @phone_number.each do |type, number| 
-  #     number << "#{type}: #{number},"
-  #   end
-  #   number
-  # end
-    
-
-  def self.create(name, email, phone_number = {})
+  def self.create(name, email, phone_number = [])
     @@contact_list << Contact.new(name, email, phone_number)
   end
 
