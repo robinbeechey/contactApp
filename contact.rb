@@ -30,7 +30,7 @@ class Contact
     if is_new?
       result = $conn.exec_params('INSERT INTO contacts (first_name, last_name, email) VALUES ($1, $2, $3)', [first_name, last_name, email])
     else
-      $conn.exec_params('UPDATE contacts SET (first_name, last_name, email) VALUES ($1, $2, $3) WHERE id = $4', [first_name, last_name, email, id])
+      result = $conn.exec_params("UPDATE contacts SET first_name = $1, last_name = $2, email = $3 WHERE id = $4;", [first_name, last_name, email, id])
     end
   end
 
