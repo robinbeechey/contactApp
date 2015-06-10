@@ -1,13 +1,6 @@
 require_relative 'setup' 
 require_relative 'contact'
-require 'byebug'
 
-
-#add number and relation to it
-#add email validation
-#add other validation
-#add delete, or update modes
-#implement errors
 
 case ARGV[0]
 
@@ -41,8 +34,6 @@ case ARGV[0]
     puts "first name, last name, email, phone number or delete"
 
     find = STDIN.gets.chomp
-
-     #must be exacly typed for now
     
     if find == 'first name'
       puts "please enter name"

@@ -1,18 +1,6 @@
 require_relative 'contact'
 require 'byebug'
 
-
-
-
-Contact.create(first_name: "Pepe", last_name: "Cortisona", email: "piki@gmail.com")
-
-@contact1 = Contact.find(1)
-
-@contact1.phones.create(phone_number: "2505551234")
-
-
-
-
 case ARGV[0]
 
   when 'help'
@@ -40,24 +28,24 @@ case ARGV[0]
     puts "Select which way you want to find"
     puts "first name, last name, email, phone number or delete"
 
-    @find = STDIN.gets.chomp
+    find = STDIN.gets.chomp
     
-    if @find == 'first name'
+    if find == 'first name'
       puts "please enter name"
-      @name = STDIN.gets.chomp
-      Contact.find_all_by_firstname(@name)
-    elsif @find == 'last name'
+      name = STDIN.gets.chomp
+      Contact.find_all_by_firstname(name)
+    elsif find == 'last name'
       puts "please enter last name"
-      @last = STDIN.gets.chomp
-      Contact.find_all_by_lastname(@last)
-    elsif @find == 'phone number'
+      last = STDIN.gets.chomp
+      Contact.find_all_by_lastname(last)
+    elsif find == 'phone number'
       puts "please enter phone number"
-      @number = STDIN.gets.chomp
-      Contact.find_all_by_number(@number)
-    elsif @find == 'email'
+      number = STDIN.gets.chomp
+      Contact.find_all_by_number(number)
+    elsif find == 'email'
       puts "please enter email"
-      @email = STDIN.gets.chomp
-      Contact.find_by_email(@email)
+      email = STDIN.gets.chomp
+      Contact.find_by_email(email)
     else      
       puts "not sure what you mean by that"
     end     
